@@ -3,6 +3,7 @@ import base64
 from datetime import datetime
 import os
 import shutil
+import cv2
 
 import numpy as np
 import socketio
@@ -47,6 +48,31 @@ controller = SimplePIController(0.1, 0.002)
 set_speed = 9
 controller.set_desired(set_speed)
 
+# Image cropping delimiters
+HORIZON=60
+BONNET=136
+
+def crop(image):
+    """
+    Crop the image between the given delimiters for the
+    horizon and the bonnet of the car.
+    """
+    shape = image.shape
+    
+    cropped = image[HORIZON:BONNET,0:shape[1],:]
+    
+    return cropped
+
+def resize(image, resize_dim):
+    return cv2.resize(image,resize_dim,cv2.INTER_AREA)
+def convertToYUV(image):
+    new_img = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
+    return new_img
+def preProcessImage(image):
+    dst=crop(image)
+    dst=resize(dst,(64,64))
+    dst=convertToYUV(dst)
+    return dst
 
 @sio.on('telemetry')
 def telemetry(sid, data):
@@ -60,8 +86,13 @@ def telemetry(sid, data):
         # The current image from the center camera of the car
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
+        
         image_array = np.asarray(image)
-        steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
+ 
+        img=preProcessImage(image_array)
+        
+
+        steering_angle = float(model.predict(img[None, :, :, :], batch_size=1))
 
         throttle = controller.update(float(speed))
 
