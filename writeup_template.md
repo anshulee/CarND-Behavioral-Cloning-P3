@@ -18,13 +18,13 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image1]: ./images/Center.png "Center Driving "
+[image2]: ./images/recovery.png "recovery"
+[image3]: ./images/bridgerecovery.png "Recovery Image"
+[image4]: ./images/alldata.png "all data"
+[image5]: ./images/filtereddata.png "all data"
+
+
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -66,60 +66,48 @@ The model used an adam optimizer, so the learning rate was not tuned manually
 ####4. Appropriate training data
 
 This was the main part of the project as far as i could see. I adopted the following strategy
-1. First i simply generated data for 1 lap and ensured that the the car still drives with a basic model( and ofcourse crashes)
-2. Once i was sure the system is in place i collected data for 3 laps of center driving
-3. I used this data along with the Udacity Data to generate the training data set. And split this combination to get the validation set
-4. Next i created some recovery data explained in another section below
+*1. First i simply generated data for 1 lap and ensured that the the car still drives with a basic model( and ofcourse crashes)
+*2. Once i was sure the system is in place i collected data for 3 laps of center driving
+*3. I used this data along with the Udacity Data to generate the training data set. And split this combination to get the validation set. I used data from all three cameras with a correction angle ( which i reached on by trial and error) so i got a pretty large data set
+*4. Next i created some recovery data explained in another section below. For each set of recovery data i created 10 sets of data ( ln 127-194). I just wanted to create more examples of recovery.
 For details about how I created the training data, see the next section. 
+*5. I also avoided adding images with 0 speed as they were not representative of driving
 
 ###Model Architecture and Training Strategy
 
 ####1. Solution Design Approach
-
-The overall strategy for deriving a model architecture was to ...
-
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
-
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
-
-To combat the overfitting, I modified the model so that ...
-
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
-
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
-
+After reading a few blogs about this project i noticed that most students were sticking with nVidia or Comma.ai. I decided to try these out to start with and nVidia worked for me without any modifications
 ####2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture  consisted of a nVidia model neural network without any modifications
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
 
 ####3. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
+![alt text][image1]
+
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to recover if it reaches an edge This image is an example of what a recovery looks like starting from ... :
+
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
+I was then having issues on the bridge and recored some data for recovery on the bridge.
 ![alt text][image3]
+To augment the data sat, I also flipped images and angles thinking that this would help get the network more examples of left and right steering. This was done in the generator(ln 376)
+
+After the collection process, I had 71911 number of data points. I then preprocessed this data by 
+*Cropping the sky and bonnet section off
+*Resizing to 64*64 as needed by nVidia architecture
+*Converting to YUV scale as recommended by nVidia
+
+Data Distribution Flattening
+I also used tried to adjust the number of images i had per steering angle so as to reduce any bias. I used a histogram to plot number of images per angle and then reduced the ones with more data.
+Here is what the histogram looked like before flattening
 ![alt text][image4]
+This made sense since i had added all 3 camera images with a correction of +-.25
+Post flattening
 ![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
 
 
 I finally randomly shuffled the data set and put Y% of the data into a validation set. 
