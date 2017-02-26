@@ -18,7 +18,7 @@ The goals / steps of this project are the following:
 [image3]: ./Images/bridgerecovery.png "Recovery Image"
 [image4]: ./Images/alldata.png "all data"
 [image5]: ./Images/filtereddata.png "all data"
-[image6]: ./Images/nvidiamodel.png "all data"
+[image6]: ./Images/nVidia_model.png "all data"
 
 
 
@@ -128,3 +128,5 @@ I used a Python generator to generate data for each batch of the training and va
 With the groundwork in place i experimented with number of epochs and samples per epochs . Once i saw the loss getting reduced i tested the model and the car was able to drive by without any crashes. 
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10 as evidenced by the validation loss. I used an adam optimizer with a learning rate of 1e-4( reached here after a few experiments)
+
+The car crashes on track 2 because for that we should ideally augment the data with shadows and some distortion. Also i did not train the car on track 2 at all ( due to lack of time).
