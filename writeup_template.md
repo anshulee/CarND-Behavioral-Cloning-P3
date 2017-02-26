@@ -49,15 +49,15 @@ The WorkingModel-Final.py  file contains the code for training and saving the co
 ###Model Architecture and Training Strategy
 
 ####1. An appropriate model architecture has been employed
-I have used the Basic NVidia model with no changes . I just tweaked the number of epochs and samples per epoch.
+I have used the Basic NVidia model with dropouts before each fully connected layer  . After that I just tweaked the number of epochs and samples per epoch.
 Here is what the basic model looks like
 ![alt text][image6]
 
-
+I added dropouts  of 0.5 before each FCL.(ln 306 onwards)
 
 ####2. Attempts to reduce overfitting in the model
 
-The NVidia model has dropout layers before each Fully connected layer. I just ensured that the number of epochs were correctly set so as to not overtrain the network
+I added dropout layers  of 0.5 before each Fully connected layer. Post that I just ensured that the number of epochs were correctly set so as to not overtrain the network
 
 ####3. Model parameter tuning
 
@@ -79,9 +79,7 @@ After reading a few blogs about this project i noticed that most students were s
 
 ####2. Final Model Architecture
 
-The final model architecture  consisted of a nVidia model neural network without any modifications
-
-
+The final model architecture  consisted of a nVidia model neural network with dropout layers before each FCL
 ####3. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
