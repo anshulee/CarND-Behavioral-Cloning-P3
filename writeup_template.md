@@ -18,6 +18,7 @@ The goals / steps of this project are the following:
 [image3]: ./Images/bridgerecovery.png "Recovery Image"
 [image4]: ./Images/alldata.png "all data"
 [image5]: ./Images/filtereddata.png "all data"
+[image6]: ./Images/nvidiamodel.png "all data"
 
 
 
@@ -49,6 +50,10 @@ The WorkingModel-Final.py  file contains the code for training and saving the co
 
 ####1. An appropriate model architecture has been employed
 I have used the Basic NVidia model with no changes . I just tweaked the number of epochs and samples per epoch.
+Here is what the basic model looks like
+![alt text][image6]
+
+
 
 ####2. Attempts to reduce overfitting in the model
 
@@ -56,7 +61,7 @@ The NVidia model has dropout layers before each Fully connected layer. I just en
 
 ####3. Model parameter tuning
 
-The model used an adam optimizer, so the learning rate was not tuned manually
+The model used an adam optimizer with a learning rate of 1e-4.
 
 ####4. Appropriate training data
 
@@ -64,8 +69,7 @@ This was the main part of the project as far as i could see. I adopted the follo
 * First i simply generated data for 1 lap and ensured that the the car still drives with a basic model( and ofcourse crashes)
 * Once i was sure the system is in place i collected data for 3 laps of center driving
 * I used this data along with the Udacity Data to generate the training data set. And split this combination to get the validation set. I used data from all three cameras with a correction angle ( which i reached on by trial and error) so i got a pretty large data set
-* Next i created some recovery data explained in another section below. For each set of recovery data i created 10 sets of data ( ln 127-194). I just wanted to create more examples of recovery.
-For details about how I created the training data, see the next section. 
+* Next i created some recovery data explained in another section below. For each set of recovery data i created 10 sets of data ( ln 127-194). I just wanted to create more examples of recovery. For details about how I created the training data, see the next section. 
 * I also avoided adding images with 0 speed as they were not representative of driving
 
 ###Model Architecture and Training Strategy
@@ -119,5 +123,8 @@ I finally randomly shuffled the data set and put 20% of the data into a validati
 ####5. Use of Generators
 I used a Python generator to generate data for each batch of the training and validation set. This helped prevent memory errors. I ensured the generator was shuffling the images before each iteration. The generator would also create a flipped image (ln 376-384) and augment the data set.
 
+####5. Driving the car!
+
 With the groundwork in place i experimented with number of epochs and samples per epochs . Once i saw the loss getting reduced i tested the model and the car was able to drive by without any crashes. 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10 as evidenced by the validation loss. I used an adam optimizer so that manually training the learning rate wasn't required.
+
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10 as evidenced by the validation loss. I used an adam optimizer with a learning rate of 1e-4( reached here after a few experiments)
