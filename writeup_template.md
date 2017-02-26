@@ -1,10 +1,5 @@
 #**Behavioral Cloning** 
 
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
 
 **Behavioral Cloning Project**
 
@@ -77,6 +72,7 @@ For details about how I created the training data, see the next section.
 
 ####1. Solution Design Approach
 After reading a few blogs about this project i noticed that most students were sticking with nVidia or Comma.ai. I decided to try these out to start with and nVidia worked for me without any modifications
+
 ####2. Final Model Architecture
 
 The final model architecture  consisted of a nVidia model neural network without any modifications
@@ -93,25 +89,34 @@ I then recorded the vehicle recovering from the left side and right sides of the
 ![alt text][image2]
 
 I was then having issues on the bridge and recored some data for recovery on the bridge.
+
 ![alt text][image3]
+
 To augment the data sat, I also flipped images and angles thinking that this would help get the network more examples of left and right steering. This was done in the generator(ln 376)
 
-After the collection process, I had 71911 number of data points. I then preprocessed this data by 
-*Cropping the sky and bonnet section off
-*Resizing to 64*64 as needed by nVidia architecture
-*Converting to YUV scale as recommended by nVidia
+After the collection process, I had 71911 number of data points. I then preprocessed this data by :
+* Cropping the sky and bonnet section off
+* Resizing to 64*64 as needed by nVidia architecture
+* Converting to YUV scale as recommended by nVidia
 
-Data Distribution Flattening(ln 398 to 435)
+The same Preprocessing steps were added to drive.py also
+
+####4.Data Distribution Flattening
+(ln 398 to 435)
 I also used tried to adjust the number of images i had per steering angle so as to reduce any bias. I used a histogram to plot number of images per angle and then reduced the ones with more data.
 Here is what the histogram looked like before flattening
+
 ![alt text][image4]
+
 This made sense since i had added all 3 camera images with a correction of +-.25
-Post flattening
+Post flattening the data was more 'equally distributed'
+
 ![alt text][image5]
 
 
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-####3. Use of Generators
+I finally randomly shuffled the data set and put 20% of the data into a validation set. 
+
+####5. Use of Generators
 I used a Python generator to generate data for each batch of the training and validation set. This helped prevent memory errors. I ensured the generator was shuffling the images before each iteration. The generator would also create a flipped image (ln 376-384) and augment the data set.
 
 With the groundwork in place i experimented with number of epochs and samples per epochs . Once i saw the loss getting reduced i tested the model and the car was able to drive by without any crashes. 
